@@ -12,7 +12,10 @@
         <v-tab-item>
           <p class="mt-3">This mode predicts the weather pattern for the next 7 days for a given location.</p>
           <!-- Query fields -->
-          <div class="d-flex align-center mt-3">
+          <div
+            class="mt-3"
+            :class="{ 'd-flex align-center': $vuetify.breakpoint.smAndUp }"
+          >
             <v-select
               v-model="location"
               :items="locations"
@@ -24,7 +27,9 @@
             <v-btn
               color="success"
               depressed
+              :block="$vuetify.breakpoint.xsOnly"
               class="ml-sm-3"
+              :class="{ 'mt-3': $vuetify.breakpoint.xsOnly }"
               :loading="forecastLoading"
               @click="forecast()"
             >Predict!</v-btn>
@@ -35,7 +40,10 @@
         <v-tab-item>
           <p class="mt-3">This mode lets you search trough weather history between 2 dates.</p>
           <!-- Query fields -->
-          <div class="d-flex align-center mt-3">
+          <div
+            class="mt-3"
+            :class="{ 'd-flex align-center': $vuetify.breakpoint.smAndUp }"
+          >
             <v-select
               v-model="location"
               :items="locations"
@@ -53,6 +61,7 @@
                   dense
                   hide-details
                   class="ml-sm-3"
+                  :class="{ 'mt-3': $vuetify.breakpoint.xsOnly }"
                   v-bind="attrs"
                   v-on="on"
                 ></v-text-field>
@@ -71,6 +80,7 @@
                   dense
                   hide-details
                   class="ml-sm-3"
+                  :class="{ 'mt-3': $vuetify.breakpoint.xsOnly }"
                   v-bind="attrs"
                   v-on="on"
                 ></v-text-field>
@@ -83,7 +93,9 @@
             <v-btn
               color="success"
               depressed
+              :block="$vuetify.breakpoint.xsOnly"
               class="ml-sm-3"
+              :class="{ 'mt-3': $vuetify.breakpoint.xsOnly }"
               :loading="historyLoading"
               @click="history()"
             >Predict!</v-btn>
@@ -124,7 +136,7 @@
                 </v-col>
                 <v-col cols="4">
                   <v-img
-                    :src="`https://cdn.vuetifyjs.com/images/cards/${'sun'}.png`"
+                    :src="require(`@/assets/${item.icon}.png`)"
                     width="92"
                   ></v-img>
                 </v-col>
@@ -148,6 +160,15 @@
               </v-list-item-icon>
               <v-list-item-subtitle>{{ item.cloudcover }}% cloud cover</v-list-item-subtitle>
             </v-list-item>
+
+            <v-divider></v-divider>
+
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>mdi-weather-rainy</v-icon>
+              </v-list-item-icon>
+              <v-list-item-subtitle>{{ item.precipprob }}% will rain</v-list-item-subtitle>
+            </v-list-item>
           </v-card>
         </v-col>
       </v-row>
@@ -155,7 +176,7 @@
         v-else
         class="text-center my-8"
       >
-        No data yet. Select a location to start!
+        No data yet. Enter the fields to start!
       </p>
     </v-main>
   </v-app>
@@ -182,7 +203,7 @@ export default {
         const { data } = res
         this.items = data.data.days
         this.forecastLoading = false
-      }).catch(() => {})
+      }).catch(() => this.forecastLoading = false)
     },
     async history() {
       this.historyLoading = true
@@ -196,7 +217,7 @@ export default {
         const { data } = res
         this.items = data.data.days
         this.historyLoading = false
-      }).catch(() => {})
+      }).catch(() => this.historyLoading = false)
     }
   }
 };
