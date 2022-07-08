@@ -98,7 +98,7 @@
               :class="{ 'mt-3': $vuetify.breakpoint.xsOnly }"
               :loading="historyLoading"
               @click="history()"
-            >Predict!</v-btn>
+            >Search!</v-btn>
           </div>
         </v-tab-item>
       </v-tabs>
