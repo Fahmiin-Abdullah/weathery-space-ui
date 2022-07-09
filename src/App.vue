@@ -2,6 +2,25 @@
   <v-app>
     <v-main class="ma-5">
       <h1 class="text-center">Weathery Space App</h1>
+      <v-snackbar
+        v-model="errorSnackbar"
+        color="error"
+        :top="true"
+        :right="true"
+        outlined
+      >
+        {{ errorMessage }}
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            color="red"
+            text
+            v-bind="attrs"
+            @click="errorSnackbar = false"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
 
       <!-- Choose mode -->
       <v-tabs class="my-5">
@@ -194,16 +213,25 @@ export default {
     items: [],
     locations: ['Brunei', 'Australia', 'India', 'Japan', 'China', 'Malaysia', 'Indonesia'],
     forecastLoading: false,
-    historyLoading: false
+    historyLoading: false,
+    errorMessage: null,
+    errorSnackbar: false
   }),
   methods: {
     async forecast() {
       this.forecastLoading = true
-      await axios.get(`${process.env.VUE_APP_API_URL}/forecast`, { params: { location: this.location } }).then(res => {
+      await axios.get(`${process.env.VUE_APP_API_URL}/forecast`, {
+        params: {
+          location: this.location
+        }
+      }).then(res => {
         const { data } = res
         this.items = data.data.days
         this.forecastLoading = false
-      }).catch(() => this.forecastLoading = false)
+      }).catch(err => {
+        this.errorMessage = err.response.data.message || 'Something went wrong. Please refresh'
+        this.forecastLoading = false
+      })
     },
     async history() {
       this.historyLoading = true
@@ -217,7 +245,10 @@ export default {
         const { data } = res
         this.items = data.data.days
         this.historyLoading = false
-      }).catch(() => this.historyLoading = false)
+      }).catch(err => {
+        this.errorMessage = err.response.data.message || 'Something went wrong. Please refresh'
+        this.historyLoading = false
+      })
     }
   }
 };
