@@ -9,7 +9,7 @@ It has a very simple product requirement. A weather forcasting app that connects
 1. As a user, I can select a location and query for the forecast for the next 7 days
 2. As a user, I can view location's weather report based on a date range
 
-The app is built as an SPA and made to be responsive on mobile. Initial mockup design can be found [here]()
+The app is built as an SPA and made to be responsive on mobile.
 
 ## Setting up the app
 
